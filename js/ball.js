@@ -30,6 +30,6 @@ PRTC.ball = {
   },
   
   update: function ball_update() {
-    this.sphere.rotation.z += 0.3;
+    this.sphere.rotation.z += 0.03;
   }
 }

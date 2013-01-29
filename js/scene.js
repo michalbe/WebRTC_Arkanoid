@@ -2,12 +2,12 @@ var PRTC = PRTC || {};
 
 PRTC.scene = {
  
-  WIDTH: null,
-  HEIGHT: null,
-  VIEW_ANGLE: null,
+  WIDTH: 1600,
+  HEIGHT: 920,
+  VIEW_ANGLE: 45,
   ASPECT: null,
-  NEAR: null,
-  FAR: null,
+  NEAR: 0.1,
+  FAR: 10000,
 
   container: null,
 
@@ -15,15 +15,8 @@ PRTC.scene = {
   camera: null,
   scene: null,
 
-  init: function main_init(){
-    this.WIDTH  = window.innerWidth;
-    this.HEIGHT = window.innerHeight;
-
-    // camera config
-    this.VIEW_ANGLE = 45;
+  init: function main_init() {
     this.ASPECT     = this.WIDTH / this.HEIGHT;
-    this.NEAR       = 0.1;
-    this.FAR        = 10000;
 
     // get the DOM element to attach to
     this.container = document.body,
@@ -40,7 +33,7 @@ PRTC.scene = {
     this.scene    = new THREE.Scene();
     
     // the camera starts at 0,0,0 so pull it back
-    this.camera.position.z = 300;
+    this.camera.position.z = 1200;
 
     // start the renderer
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
@@ -53,7 +46,7 @@ PRTC.scene = {
     // and the camera
     this.add(this.camera);
     
-    this.setLights(10, 50, 130);
+    this.setLights(10, 50, 350);
   },
   
   setLights: function main_setLights(x, y, z) {
@@ -71,7 +64,6 @@ PRTC.scene = {
   },
   
   add: function scene_add(object) {
-    console.log('added: ', object);
     this.scene.add(object);
   },
   
