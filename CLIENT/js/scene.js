@@ -2,13 +2,16 @@ var PRTC = PRTC || {};
 
 PRTC.scene = {
  
-  WIDTH: 1600,
-  HEIGHT: 920,
+  WIDTH: 1200,
+  HEIGHT: 700,
   VIEW_ANGLE: 45,
   ASPECT: null,
   NEAR: 0.1,
   FAR: 10000,
-
+  
+  MAX_Y: 480,
+  MAX_X: 500,
+  
   container: null,
 
   renderer: null,

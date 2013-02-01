@@ -3,6 +3,7 @@ var PRTC = PRTC || {};
 PRTC.game = {  
   modules: [
     'scene',
+    'background',
     'ball',
     'paddle',
     'opponentsPaddle'
