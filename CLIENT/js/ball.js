@@ -31,17 +31,33 @@ PRTC.ball = {
     PRTC.scene.add(this.sphere);
   },
   
+  collidesWith: function (object) {
+    // I know it's not the best solution, but it's 7AM and I worked 
+    // on it for almost 27h now. Feel free to send a pull request :)
+    var y = this.sphere.position.y;
+    var x = this.sphere.position.x;
+    var r = this.radius;
+    
+    var oX = object.cube.position.x;
+    var oY = object.cube.position.y;
+    var h = object.height;
+    var w = object.width;
+    
+    // if ( y + r > oY - h ) { return false; }
+    // if ( y - r < oY + h ) { return false; }
+    // if ( x - r > oX + w ) { return false; }
+    // if ( x + r < oX - w ) { return false; }
+    //                       
+    // return true;  
+    
+    if (x >= PRTC.scene.width/2 - w || 
+    			x <= -PRTC.scene.width/2 + w) {
+    			  return true;
+    			} else {
+    			  return false;
+    			}
+  },
+      
   update: function ball_update() {
-    var pos = this.sphere.position;
-    if (pos.y > PRTC.scene.MAX_Y) {
-      //this.sphere.position.y -= this.velocityY;
-      this.velocityY *= -1;
-    } else if (pos.y < -1*PRTC.scene.MAX_Y) {
-      this.velocityY *= -1;
-    }
-    this.sphere.position.x += this.velocityX;
-    this.sphere.position.y += this.velocityY;
-    this.sphere.rotation.x += -1*this.velocityY/60;
-    //this.sphere.rotation.x += 0.3;
   }
 }
