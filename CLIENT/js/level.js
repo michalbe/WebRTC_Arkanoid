@@ -7,7 +7,7 @@ PRTC.level= {
     this.addFloor();
     this.addSky();
     
-    var cubes = [
+    this.cubes = [
       this.createBlock({
         x: 400,
         y: 350,
@@ -16,7 +16,7 @@ PRTC.level= {
         width: 100,
         height: 700,
         dept: 100
-      }),
+      }, 'side'),
       this.createBlock({
         x: -400,
         y: 350,
@@ -25,7 +25,7 @@ PRTC.level= {
         width: 100,
         height: 700,
         dept: 100
-      }),
+      }, 'side'),
       this.createBlock({
         x: 0,
         y: 750,
@@ -34,10 +34,10 @@ PRTC.level= {
         width: 900,
         height: 100,
         dept: 100
-      })
+      }, 'top')
     ];
     
-    cubes.forEach(PRTC.scene.add, PRTC.scene);
+    this.cubes.forEach(PRTC.scene.add, PRTC.scene);
   },
   
   addFloor: function () {
@@ -62,7 +62,8 @@ PRTC.level= {
   	
     var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
   	var skyBox = new THREE.Mesh( skyBoxGeometry, skyMaterial );
-      skyBox.flipSided = true; 
+    skyBox.flipSided = true; 
+    skyBox.rotation.y = 2;  
     PRTC.scene.add(skyBox);
   },
   
@@ -70,7 +71,7 @@ PRTC.level= {
     
   },
   
-  createBlock: function(position, size) {
+  createBlock: function(position, size, name) {
     var material = new THREE.MeshLambertMaterial({
       map: THREE.ImageUtils.loadTexture('assets/floor.jpg')
     });
@@ -84,6 +85,7 @@ PRTC.level= {
       material
     );
     
+    cube.name = name;
     cube.position.set(position.x, position.y, position.z);
     
     return cube;

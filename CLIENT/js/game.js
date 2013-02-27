@@ -1,6 +1,7 @@
 var PRTC = PRTC || {};
 
 PRTC.game = {  
+  stop: false,
   modules: [
     'scene',
     
@@ -40,7 +41,9 @@ PRTC.game = {
   loop: function game_loop() {
     this.updateModules();
     PRTC.scene.render();
-    window.requestAnimationFrame(this.loop.ctx);
+    if (!this.stop) {
+      window.requestAnimationFrame(this.loop.ctx);
+    }
   }
 }
 
