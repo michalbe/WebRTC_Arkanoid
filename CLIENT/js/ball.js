@@ -12,6 +12,9 @@ PRTC.ball = {
   sphere: null,
   velocityX: 3,
   velocityY: 4,
+  
+  distance: 30,
+  caster: new THREE.Raycaster(),
   rays: [
     new THREE.Vector3(0,  1, 0),
     new THREE.Vector3(1,  1, 0),
@@ -22,7 +25,6 @@ PRTC.ball = {
     new THREE.Vector3(-1, 0, 0),
     new THREE.Vector3(-1, 1, 0)
   ],
-  caster: new THREE.Raycaster(),
   
   init: function ball_init() {
     this.material = new THREE.MeshLambertMaterial({
@@ -43,27 +45,10 @@ PRTC.ball = {
   },
       
   update: function ball_update() {
-    var pos = this.sphere.position;
-    // 
-    // var originPoint = this.sphere.position.clone();
-    // 
-    //  for (var vertexIndex = 0; vertexIndex < this.sphere.geometry.vertices.length; vertexIndex++)
-    //  {   
-    //    var localVertex = this.sphere.geometry.vertices[vertexIndex].clone();
-    //    var globalVertex = localVertex.applyMatrix4( this.sphere.matrix );
-    //    var directionVector = globalVertex.sub( this.sphere.position );
-    // 
-    //    var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-    //    var collisionResults = ray.intersectObjects( PRTC.level.cubes );
-    //    if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())  
-    //      this.velocityX *= -1;
-    //  }
-    //  
-    var distance = 30;
     for (i = 0; i < this.rays.length; i += 1) {
       this.caster.set(this.sphere.position, this.rays[i]);
-      var collisions = this.caster.intersectObjects(PRTC.level.cubes);
-      if (collisions.length > 0 && collisions[0].distance <= distance) {
+      var collisions = this.caster.intersectObjects(PRTC.level.blocks);
+      if (collisions.length > 0 && collisions[0].distance <= this.distance) {
         
        if ((i === 0 || i === 1 || i === 7)) {
          this.velocityY *= -1;
@@ -82,5 +67,6 @@ PRTC.ball = {
     this.sphere.position.x += this.velocityX;
     this.sphere.position.y += this.velocityY;
     this.sphere.rotation.x += -1*this.velocityY/60;
+    this.sphere.rotation.y += this.velocityX/60;
   }
 }

@@ -1,43 +1,48 @@
 var PRTC = PRTC || {};
 
 PRTC.level= {
+  blockHeight: 700,
+  blockWidth: 100,
+  blockDept: 100,
+  
+  distance: 400,
+  blocks: [],
   
   init: function() {
     
     this.addFloor();
     this.addSky();
     
-    this.cubes = [
+    this.blocks = [
       this.createBlock({
-        x: 400,
-        y: 350,
+        x: this.distance,
+        y: this.blockHeight/2,
         z: 0
       }, {
-        width: 100,
-        height: 700,
-        dept: 100
-      }, 'side'),
+        width: this.blockWidth,
+        height: this.blockHeight,
+        dept: this.blockDept
+      }),
       this.createBlock({
-        x: -400,
-        y: 350,
+        x: -1 * this.distance,
+        y: this.blockHeight/2,
         z: 0
       }, {
-        width: 100,
-        height: 700,
-        dept: 100
-      }, 'side'),
+        width: this.blockWidth,
+        height: this.blockHeight,
+        dept: this.blockDept
+      }),
       this.createBlock({
         x: 0,
-        y: 750,
+        y: this.blockHeight + this.blockWidth/2,
         z: 0
       }, {
-        width: 900,
-        height: 100,
-        dept: 100
-      }, 'top')
+        width: this.distance*2 + this.blockWidth,
+        height: this.blockWidth,
+        dept: this.blockDept
+      })
     ];
-    
-    this.cubes.forEach(PRTC.scene.add, PRTC.scene);
+    this.blocks.forEach(PRTC.scene.add, PRTC.scene);
   },
   
   addFloor: function () {
@@ -65,10 +70,6 @@ PRTC.level= {
     skyBox.flipSided = true; 
     skyBox.rotation.y = 2;  
     PRTC.scene.add(skyBox);
-  },
-  
-  buildBorders: function(){
-    
   },
   
   createBlock: function(position, size, name) {
