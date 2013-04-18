@@ -1,6 +1,9 @@
 var PRTC = PRTC || {};
 
 PRTC.level= {
+  floorTexture: 'assets/floor.jpg',
+  skyTexture: 'assets/sky.jpg',
+  
   blockHeight: 700,
   blockWidth: 100,
   blockDept: 100,
@@ -22,7 +25,7 @@ PRTC.level= {
         width: this.blockWidth,
         height: this.blockHeight,
         dept: this.blockDept
-      }),
+      }, 'side'),
       this.createBlock({
         x: -1 * this.distance,
         y: this.blockHeight/2,
@@ -31,7 +34,7 @@ PRTC.level= {
         width: this.blockWidth,
         height: this.blockHeight,
         dept: this.blockDept
-      }),
+      }, 'side'),
       this.createBlock({
         x: 0,
         y: this.blockHeight + this.blockWidth/2,
@@ -40,13 +43,15 @@ PRTC.level= {
         width: this.distance*2 + this.blockWidth,
         height: this.blockWidth,
         dept: this.blockDept
-      })
+      }, 'top')
     ];
     this.blocks.forEach(PRTC.scene.add, PRTC.scene);
+    
+    PRTC.ball.addCollidingObjects(this.blocks);
   },
   
   addFloor: function () {
-    var floorTexture = new THREE.ImageUtils.loadTexture( 'assets/floor.jpg' );
+    var floorTexture = new THREE.ImageUtils.loadTexture( this.floorTexture );
   	var floorMaterial = new THREE.MeshLambertMaterial( 
   	  { map: floorTexture, side: THREE.BackSide } 
   	);
@@ -60,7 +65,7 @@ PRTC.level= {
   
   addSky: function (){
 
-    var skyTexture = new THREE.ImageUtils.loadTexture( 'assets/sky.jpg' );
+    var skyTexture = new THREE.ImageUtils.loadTexture(this.skyTexture);
   	var skyMaterial = new THREE.MeshBasicMaterial( 
   	  { map: skyTexture, side: THREE.BackSide } 
   	);
@@ -74,7 +79,7 @@ PRTC.level= {
   
   createBlock: function(position, size, name) {
     var material = new THREE.MeshLambertMaterial({
-      map: THREE.ImageUtils.loadTexture('assets/floor.jpg')
+      map: THREE.ImageUtils.loadTexture(this.floorTexture)
     });
     
     var cube = new THREE.Mesh(

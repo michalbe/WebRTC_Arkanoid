@@ -10,8 +10,9 @@ PRTC.ball = {
   segments: 16,
   rings: 16,
   sphere: null,
-  velocityX: 3,
-  velocityY: 4,
+  velocityX: 7,
+  velocityY: 3,
+  collides: [],
   
   distance: 30,
   caster: new THREE.Raycaster(),
@@ -41,29 +42,47 @@ PRTC.ball = {
     );
 
     this.sphere.name = "ball";
+    
+    this.sphere.position.y = 200;
     PRTC.scene.add(this.sphere);
   },
       
+  addCollidingObjects: function(objects) {
+    this.collides = this.collides.concat(objects);
+  },
+  
   update: function ball_update() {
     for (i = 0; i < this.rays.length; i += 1) {
       this.caster.set(this.sphere.position, this.rays[i]);
-      var collisions = this.caster.intersectObjects(PRTC.level.blocks);
+      var collisions = this.caster.intersectObjects(this.collides);
       if (collisions.length > 0 && collisions[0].distance <= this.distance) {
-        
+
+        //console.log(collisions[0].object.name);
+       if (collisions[0].object.name === 'paddle') {
+         this.velocityY *= 1.1;
+       }
+       
        if ((i === 0 || i === 1 || i === 7)) {
          this.velocityY *= -1;
+         //this.velocityY = (this.velocityY*-1) + ~~(Math.random()*6)-3;
        }  else if ((i === 3 || i === 4 || i === 5)) {
          this.velocityY *= -1;
+         //this.velocityY = (this.velocityY*-1) + ~~(Math.random()*6)-3;
        }
        
        if ((i === 1 || i === 2 || i === 3)) {
          this.velocityX *= -1;
+         //this.velocityX = (this.velocityX*-1) + ~~(Math.random()*6)-3;
        } else if ((i === 5 || i === 6 || i === 7)) {
          this.velocityX *= -1;
+         //this.velocityX = (this.velocityX*-1) + ~~(Math.random()*6)-3;
        }
      }
     }
     
+    if (this.sphere.position.y < 0) {
+      this.sphere.position.y = 200;
+    }
     this.sphere.position.x += this.velocityX;
     this.sphere.position.y += this.velocityY;
     this.sphere.rotation.x += -1*this.velocityY/60;

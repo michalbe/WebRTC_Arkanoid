@@ -4,16 +4,19 @@ PRTC.paddle = {
   // flag for 'game' module
   updatable: true,
   
-  texture: 'assets/fire-texture.jpg',
+  texture: 'assets/paddle.jpg',
   material: null,
-  width: 100,
-  height: 200,
-  dept: 30,
+  width: 200,
+  height: 20,
+  dept: 100,
   cube: null,
-  
-  startPosition: -780,
+  step: 10,
+  keyboard: null,
+  maxDistance: null,
   
   init: function paddle_init() {
+    this.maxDistance = PRTC.level.distance - (this.width/2) - (PRTC.level.blockWidth/2);
+    this.keyboard = PRTC.game.keyboard;
     this.material = new THREE.MeshLambertMaterial({
       map: THREE.ImageUtils.loadTexture(this.texture)
     });
@@ -27,16 +30,17 @@ PRTC.paddle = {
       this.material
     );
     
-    this.cube.position.x = this.startPosition;
+    this.cube.name = "paddle";
+    this.cube.position.y = this.height*1.1;
     PRTC.scene.add(this.cube);
+    PRTC.ball.addCollidingObjects(this.cube);
   },
   
   update: function paddle_update() {
-    //this.rotation.z += 0.3;
+    if (this.keyboard.pressed("left") && this.cube.position.x > -1*this.maxDistance) {
+      this.cube.position.x -= this.step;
+    } else if ( this.keyboard.pressed("right") && this.cube.position.x < this.maxDistance) {
+      this.cube.position.x += this.step;
+    }
   }
 }
-
-// oponents paddle
-
-PRTC.opponentsPaddle = eval(uneval(PRTC.paddle));
-PRTC.opponentsPaddle.startPosition = 780;

@@ -6,9 +6,11 @@ PRTC.game = {
     'scene',
     
     'level',
-    'ball'
+    'ball',
+    'paddle'
   ],
   
+  keyboard: new THREEx.KeyboardState(),
   updatable: [],
   
   init: function game_init() {
