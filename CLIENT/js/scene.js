@@ -36,7 +36,7 @@ PRTC.scene = {
     this.scene    = new THREE.Scene();
     
     // the camera starts at 0,0,0 so pull it back
-    this.camera.position.set(0,150, 900);
+    this.camera.position.set(0,150, 1200);
     this.camera.rotation.x = 0.2;
     
     // start the renderer

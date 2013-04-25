@@ -10,11 +10,11 @@ PRTC.ball = {
   segments: 16,
   rings: 16,
   sphere: null,
-  velocityX: 7,
-  velocityY: 3,
+  velocityX: ~~(Math.random()*11),
+  velocityY: -4,
   collides: [],
   
-  distance: 30,
+  distance: 20,
   caster: new THREE.Raycaster(),
   rays: [
     new THREE.Vector3(0,  1, 0),
@@ -43,7 +43,7 @@ PRTC.ball = {
 
     this.sphere.name = "ball";
     
-    this.sphere.position.y = 200;
+    this.sphere.position.y = 100;
     PRTC.scene.add(this.sphere);
   },
       
@@ -58,10 +58,12 @@ PRTC.ball = {
       if (collisions.length > 0 && collisions[0].distance <= this.distance) {
 
         //console.log(collisions[0].object.name);
-       if (collisions[0].object.name === 'paddle') {
-         this.velocityY *= 1.1;
-       }
-       
+       // if (collisions[0].object.name === 'paddle') {
+       //   this.velocityY *= 1.1;//~~(Math.random()*10) * this.velocityY > 0 ? 1 : -1;
+       // } else if (collisions[0].object.name === 'top') {
+       //    this.velocityY *= 0.8;
+       // }
+       // 
        if ((i === 0 || i === 1 || i === 7)) {
          this.velocityY *= -1;
          //this.velocityY = (this.velocityY*-1) + ~~(Math.random()*6)-3;
