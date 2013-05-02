@@ -73,6 +73,10 @@ PRTC.scene = {
     this.scene.add(object);
   },
   
+  remove: function scene_add(object) {
+    this.scene.remove(object);
+  },
+  
   render: function main_render() { 
     this.renderer.render(this.scene, this.camera);
   }
