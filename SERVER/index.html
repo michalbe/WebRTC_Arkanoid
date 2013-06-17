@@ -1,0 +1,14 @@
+<!DOCTYPE>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<script>
+    var socket = io.connect('http://localhost');
+        socket.on('back-playerjoined', function (data) {
+        console.log(data);
+    });
+</script>
+</body>
