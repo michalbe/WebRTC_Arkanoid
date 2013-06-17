@@ -1,12 +1,11 @@
 var app = require('http').createServer(main),
     io = require('socket.io').listen(app),
     fs = require('fs'),
-    MZ = {},
-    main;
+    MZ = {};
 
 app.listen(8080);
 
-main = function (req, res) {
+function main (req, res) {
     fs.readFile(__dirname + '/index.html',
     function (err, data) {
         if (err) {
@@ -14,15 +13,18 @@ main = function (req, res) {
             return res.end('Error loading index.html');
         }
 
-        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.writeHead(200);
         res.end(data);
     });
 }
 
+//game object
 MZ.PLAYERS = {};
 MZ.PLAYER_POS = {};
 
 io.sockets.on('connection', function (socket) {
+
+    //events with front/back prefix for easier development
     socket.emit('back-playerjoined', { hello: 'world' });
 
     socket.on('front-playermoved', function(data){
@@ -39,5 +41,8 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('front-playerloose', function(data){
         socket.emit('back-playerloose');
+    });
+
+    socket.on('disconnect', function () {
     });
 });
