@@ -130,6 +130,7 @@ io.sockets.on('connection', function (socket) {
 
     //TODO events for second player joining game needed
 
+    //TODO save position change
     socket.on('front-playermoved', function(data){
         var player = MZ.PLAYERS[socket.id],
             gameHash = player.getGame();
@@ -152,6 +153,6 @@ io.sockets.on('connection', function (socket) {
         }
 
         delete MZ.SOCKETS[socket.id];
-        delete player;
+        delete MZ.PLAYERS[socket.id];
     });
 });
