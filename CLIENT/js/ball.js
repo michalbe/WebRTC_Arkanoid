@@ -10,7 +10,7 @@ PRTC.ball = {
   segments: 16,
   rings: 16,
   sphere: null,
-  velocityX: ~~(Math.random()*21),
+  velocityX: 5, //~~(Math.random()*10),
   velocityY: -4,
   collides: [],
   
@@ -58,6 +58,7 @@ PRTC.ball = {
   },
   
   update: function ball_update() {
+    this.distrance = Math.max(this.velocityY, this.velocityX)*2;
     for (i = 0; i < this.rays.length; i += 1) {
       this.caster.set(this.sphere.position, this.rays[i]);
       var collisions = this.caster.intersectObjects(this.collides);
@@ -75,6 +76,14 @@ PRTC.ball = {
        if (collisions[0].object.name === 'block') {
          PRTC.scene.remove(collisions[0].object);
          this.removeFromCollidingObjects(collisions[0].object);
+         PRTC.game.blocksDestroyed++;
+         if (PRTC.game.blocksDestroyed === PRTC.game.numberOfBlocks) {
+           PRTC.game.updatable.push(PRTC.scene);
+           PRTC.paddle.cube.scale.x = PRTC.level.distance*2/PRTC.paddle.width;
+           PRTC.paddle.cube.position.x = 0;
+         }
+       } else if (collisions[0].object.name === 'paddle') {
+         this.velocityX += collisions[0].object.vel;
        }
        
        if ((i === 0 || i === 1 || i === 7)) {

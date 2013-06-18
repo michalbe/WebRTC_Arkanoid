@@ -8,7 +8,7 @@ PRTC.level= {
   blockWidth: 100,
   blockDept: 100,
   
-  distance: 400,
+  distance: 600,
   blocks: [],
   
   init: function() {

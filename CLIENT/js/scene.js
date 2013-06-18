@@ -1,7 +1,6 @@
 var PRTC = PRTC || {};
 
 PRTC.scene = {
- 
   WIDTH: window.innerWidth, //1200,
   HEIGHT: window.innerHeight, //700,
   VIEW_ANGLE: 45,
@@ -79,5 +78,14 @@ PRTC.scene = {
   
   render: function main_render() { 
     this.renderer.render(this.scene, this.camera);
+  },
+  
+  update: function(){
+    var timer = Date.now() * 0.005;
+
+    this.camera.position.x = Math.cos( timer ) * 100;
+    this.camera.position.z = Math.sin( timer ) * 100
+  
+    this.camera.lookAt( PRTC.ball.sphere.position );
   }
 }

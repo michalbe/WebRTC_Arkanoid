@@ -11,7 +11,8 @@ PRTC.game = {
     'block',
   ],
   
-  numberOfBlocks: 88,
+  numberOfBlocks: 66,
+  blocksDestroyed: 0,
   
   keyboard: new THREEx.KeyboardState(),
   updatable: [],

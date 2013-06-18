@@ -39,8 +39,12 @@ PRTC.paddle = {
   update: function paddle_update() {
     if (this.keyboard.pressed("left") && this.cube.position.x > -1*this.maxDistance) {
       this.cube.position.x -= this.step;
+      this.cube.vel = -2;
     } else if ( this.keyboard.pressed("right") && this.cube.position.x < this.maxDistance) {
       this.cube.position.x += this.step;
+      this.cube.vel = 2;
+    } else {
+      this.cube.vel = 0;
     }
   }
 }
