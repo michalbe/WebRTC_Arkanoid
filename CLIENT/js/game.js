@@ -1,19 +1,33 @@
 var PRTC = PRTC || {};
 
 PRTC.game = {  
+  stop: false,
   modules: [
     'scene',
+    
+    'level',
     'ball',
     'paddle',
-    'opponentsPaddle'
+    'block',
   ],
   
+  numberOfBlocks: 88,
+  
+  keyboard: new THREEx.KeyboardState(),
   updatable: [],
   
   init: function game_init() {
     this.modules.forEach(this.initModule, this);
     this.loop.ctx = this.loop.bind(this);
     this.loop.ctx();
+    
+    var blocks = [];
+    for (var i=0; i<this.numberOfBlocks; i++) {
+      blocks.push(PRTC.block.create());
+    }
+    
+    PRTC.ball.addCollidingObjects(blocks);
+    
   },
   
   initModule: function game_initModule(module) {
@@ -40,7 +54,9 @@ PRTC.game = {
   loop: function game_loop() {
     this.updateModules();
     PRTC.scene.render();
-    window.requestAnimationFrame(this.loop.ctx);
+    if (!this.stop) {
+      window.requestAnimationFrame(this.loop.ctx);
+    }
   }
 }
 
