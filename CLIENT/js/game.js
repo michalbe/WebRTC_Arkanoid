@@ -11,7 +11,6 @@ PRTC.game = {
     'block',
   ],
   
-  numberOfBlocks: 66,
   blocksDestroyed: 0,
   
   keyboard: new THREEx.KeyboardState(),
@@ -23,7 +22,7 @@ PRTC.game = {
     this.loop.ctx();
     
     var blocks = [];
-    for (var i=0; i<this.numberOfBlocks; i++) {
+    for (var i=0; i< PRTC.block.numberOfBlocks; i++) {
       blocks.push(PRTC.block.create());
     }
     
