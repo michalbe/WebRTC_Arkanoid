@@ -6,7 +6,7 @@ var app = require('http').createServer(main),
     //game object
     MZ = {};
 
-app.listen(8080);
+app.listen(8060);
 
 function main (req, res) {
     fs.readFile(__dirname + '/index.html',
