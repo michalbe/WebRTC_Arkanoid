@@ -19,6 +19,7 @@ Install
 command line:
 
     npm install
+    node server.js
 
 
 browser:
