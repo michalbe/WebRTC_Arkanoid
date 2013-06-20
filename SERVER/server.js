@@ -16,7 +16,7 @@ function main (req, res) {
             return res.end('Error loading index.html');
         }
 
-        res.writeHead(200);
+        res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(data);
     });
 }
@@ -73,15 +73,17 @@ var removeGamePlayer = function(gameId, player){
     var game = MZ.GAMES[gameId],
         idx = null;
 
-    for (var i=0, l=game.length; i<l; i+=1){
-        if (game[i] === player){
-            idx = i;
-            break;
+    if (game){
+        for (var i=0, l=game.length; i<l; i+=1){
+            if (game[i] === player){
+                idx = i;
+                break;
+            }
         }
-    }
 
-    if (idx != null){
-        game.splice(idx, 1);
+        if (idx != null){
+            game.splice(idx, 1);
+        }
     }
 };
 
