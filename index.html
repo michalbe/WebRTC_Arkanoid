@@ -9,14 +9,26 @@
         margin:0px;
         padding:0px;
       }
+      
+      #buttons {
+        position: absolute;
+        top: 0;
+      }
     </style>
   </head>
   <body style="overflow:hidden">
+    <div id="buttons">
+      <button id="newGame">NEW GAME</button><br/>
+      <button id="invite">INVITE</button>
+    </div>
+    
     <script src="js/libs/three.js"></script>
     <script src="js/libs/THREEx.WindowResize.js"></script>
     <script src="js/libs/THREEx.Keyboard.js"></script>
+    <script src="socket.io/socket.io.js"></script>
     
     <script src="js/scene.js"></script>
+    <script src="js/net.js"></script>
     <script src="js/level.js"></script>
     <script src="js/ball.js"></script>
     <script src="js/paddle.js"></script>
