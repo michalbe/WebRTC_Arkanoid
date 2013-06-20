@@ -1,0 +1,31 @@
+<!DOCTYPE>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div>
+        <input type="button" id="new" value="New Game"></input>
+    </div>
+<script>
+    var newBtn = document.getElementById('new');
+
+    newBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+
+        socket.emit('front-newgame');
+    });
+
+    var socket = io.connect('http://localhost');
+
+    //do debugu, ze sie polaczyles z backendem
+    socket.on('back-connected', function(data){
+        console.log('JOINED: ', data);
+    });
+
+    //stworzona nowa gra. Zwraca jej hasz jako gameHash
+    socket.on('back-newgame', function (data){
+        console.log('data: ', data);
+    })
+</script>
+</body>
