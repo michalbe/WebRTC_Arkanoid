@@ -125,34 +125,38 @@ io.sockets.on('connection', function (socket) {
             secondPlayer = false,
             game;
 
-        if (!hash){
-            hash = generateGameHash(); 
-        }
-
-        game = MZ.GAMES[hash];
-
-        if (game != null && game.length !== 2){
-            MZ.GAMES[hash].push(player);
-
-            secondPlayer = true;
-        } else {
-            if (game != null && game.length === 2){
-                //2 players already
-                hash = generateGameHash();
+        if (!player.getGame()){
+            if (!hash){
+                hash = generateGameHash(); 
             }
-            MZ.GAMES[hash] = [player];
+
+            game = MZ.GAMES[hash];
+
+            if (game != null && game.length !== 2){
+                MZ.GAMES[hash].push(player);
+
+                secondPlayer = true;
+            } else {
+                if (game != null && game.length === 2){
+                    //2 players already
+                    hash = generateGameHash();
+                }
+                MZ.GAMES[hash] = [player];
+            }
+
+            player.setGame(hash);
+
+            //join to new room
+            //https://github.com/LearnBoost/socket.io/wiki/Rooms
+            socket.join(hash);
+        } else {
+            hash = player.getGame();
         }
-
-        player.setGame(hash);
-
-        //join to new room
-        //https://github.com/LearnBoost/socket.io/wiki/Rooms
-        socket.join(hash);
 
         //debug
         var rooms = io.sockets.manager.roomClients[socket.id];
 
-        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES});
+        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES, totalRooms: io.sockets.manager.rooms});
     });
 
     //TODO save position change
