@@ -1,10 +1,21 @@
 {
-  "name": "Moz game",
-  "description": "Mozilla WebRTC sample game",
-  "author": "michalbe@mozilla.com, jsiemiatkowski@gmail.com",
+  "name": "mozrtcgameserver",
+  "description": "Server for sample game showing Mozilla WebRTC working",
+  "author": "Jakub Siemiatkowski <jsiemiatkowski@gmail.com>",
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "Michal Budzynski",
+      "email": "michalbe@mozilla.com"
+    },
+    {
+      "name": "Jakub Siemiatkowski",
+      "email": "jsiemiatkowski@gmail.com"
+    }
+  ],
   "dependencies": {
-    "socket-io": ">= 0.9.x",
-    "node-static": ">= 0.6.x"
+    "socket.io": ">= 0.9.0",
+    "node-static": ">= 0.6.8"
   },
   "engine": "node 0.10.x"
 }
