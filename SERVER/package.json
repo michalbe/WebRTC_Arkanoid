@@ -1,0 +1,10 @@
+{
+  "name": "Moz game",
+  "description": "Mozilla WebRTC sample game",
+  "author": "michalbe@mozilla.com, jsiemiatkowski@gmail.com",
+  "dependencies": {
+    "socket-io": ">= 0.9.x",
+    "node-static": ">= 0.6.x"
+  },
+  "engine": "node 0.10.x"
+}

@@ -1,25 +1,16 @@
-var app = require('http').createServer(main),
-    io = require('socket.io').listen(app),
+var st = require('node-static'),
     crypto = require('crypto'),
     fs = require('fs'),
+    http = require('http'),
+    file = new(st.Server)();
 
+var app = http.createServer(function (req, res) {
+  file.serve(req, res);
+}).listen(8060);
+
+    var io = require('socket.io').listen(app),
     //game object
     MZ = {};
-
-app.listen(8060);
-
-function main (req, res) {
-    fs.readFile(__dirname + '/index.html',
-    function (err, data) {
-        if (err) {
-            res.writeHead(500);
-            return res.end('Error loading index.html');
-        }
-
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(data);
-    });
-}
 
 var generateGameHash = function(){
     var seed = crypto.randomBytes(20),
@@ -45,7 +36,7 @@ var Player = function(id){
         me.x = x;
     };
 
-    var getPos = function(){
+    var getX = function(){
         return {
             x: me.x,
             y: me.y
@@ -69,8 +60,8 @@ var Player = function(id){
     }
 
     return {
-        setPos : setPos,
-        getPos : getPos,
+        setX : setX,
+        getX : getX,
         getId : getId,
         joinGame : joinGame,
         getGame : getGame,
