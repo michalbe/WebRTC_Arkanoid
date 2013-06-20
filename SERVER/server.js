@@ -95,8 +95,7 @@ MZ.PLAYERS = {};
  }
 */
 MZ.GAMES = {};
-//object with connected players not currently in game
-MZ.NEW_PLAYERS = {};
+
 //object with all sockets currently connected
 MZ.SOCKETS = {};
 
@@ -105,18 +104,29 @@ io.sockets.on('connection', function (socket) {
         player = new Player(token);
 
     MZ.SOCKETS[token] = socket;
-    MZ.NEW_PLAYERS[token] = player;
+    MZ.PLAYERS[token] = player;
 
     //events with front/back prefix for easier development
     socket.emit('back-connected', { socketToken: token });
 
-    socket.on('front-newgame', function() {
-        var hash = generateGameHash(),
-            player = MZ.NEW_PLAYERS[socket.id];
+    socket.on('front-newgame', function(data) {
+        var hash = data.data,
+            player = MZ.PLAYERS[socket.id],
 
-        MZ.PLAYERS[player.getId()] = player;
-        MZ.GAMES[hash] = [socket];
-        delete MZ.NEW_PLAYERS[player.getId()];
+            //is it the second player in game ?
+            secondPlayer = false;
+
+        if (!hash){
+            hash = generateGameHash(); 
+        }
+
+        if (MZ.GAMES[hash]){
+            MZ.GAMES[hash].push(player);
+
+            secondPlayer = true;
+        } else {
+            MZ.GAMES[hash] = [player];
+        }
 
         //join to new room
         //https://github.com/LearnBoost/socket.io/wiki/Rooms
@@ -125,17 +135,15 @@ io.sockets.on('connection', function (socket) {
         //debug
         var rooms = io.sockets.manager.roomClients[socket.id];
 
-        socket.emit('back-newgame', {hash: hash, rooms: rooms});
+        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer});
     });
 
-    //TODO events for second player joining game needed
-
     //TODO save position change
-    socket.on('front-playermoved', function(data){
+    socket.on('front-playermove', function(data){
         var player = MZ.PLAYERS[socket.id],
             gameHash = player.getGame();
 
-        socket.broadcast.to(gameHash).emit('back-playermoved');
+        socket.broadcast.to(gameHash).emit('back-playermove', {data: data.data});
     });
 
     socket.on('disconnect', function () {
@@ -146,7 +154,7 @@ io.sockets.on('connection', function (socket) {
         removeGamePlayer(game, player);
 
         //second player still in the game
-        if (game.length > 0){
+        if (game && game.length > 0){
             socket.broadcast.to(gameHash).emit('back-playerleft');
         } else {
             delete MZ.GAMES[player.getGame()];

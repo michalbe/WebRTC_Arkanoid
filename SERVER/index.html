@@ -6,26 +6,44 @@
 <body>
     <div>
         <input type="button" id="new" value="New Game"></input>
+        <input type="text" id="hasz"></input>
     </div>
 <script>
-    var newBtn = document.getElementById('new');
-
-    newBtn.addEventListener('click', function(e){
-        e.stopPropagation();
-
-        socket.emit('front-newgame');
-    });
-
     var socket = io.connect('http://localhost');
 
     //do debugu, ze sie polaczyles z backendem
     socket.on('back-connected', function(data){
-        console.log('JOINED: ', data);
-    });
 
-    //stworzona nowa gra. Zwraca jej hasz jako gameHash
-    socket.on('back-newgame', function (data){
-        console.log('data: ', data);
-    })
+        alert('CONNECTED');
+        
+        var newBtn = document.getElementById('new'),
+            textField = document.getElementById('hasz');
+
+        newBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+
+            var inputData = textField.value;
+
+            socket.emit('front-newgame', {data: inputData});
+        });
+
+        textField.addEventListener('onchange', function(e){
+            e.stopPropagation();
+
+            var inputData = textField.value;
+
+            socket.emit('front-playermove', {data: inputData});
+        });
+
+        //stworzona nowa gra. Zwraca jej hasz jako gameHash
+        socket.on('back-newgame', function (data){
+            console.log('GAME HASZ: ', data);
+        });
+
+        //player sie rusza
+        socket.on('back-playermove', function (data){
+            console.log('PLAYER SIE RUSZA: ', data);
+        });
+    });
 </script>
 </body>
