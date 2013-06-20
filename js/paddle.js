@@ -40,9 +40,11 @@ PRTC.paddle = {
   
   update: function paddle_update() {
     if (this.keyboard.pressed("left") && this.cube.position.x > -1*this.maxDistance) {
+      PRTC.net.send(this.cube.position.x);
       this.cube.position.x -= this.step;
       this.cube.vel = -2;
     } else if ( this.keyboard.pressed("right") && this.cube.position.x < this.maxDistance) {
+      PRTC.net.send(this.cube.position.x);
       this.cube.position.x += this.step;
       this.cube.vel = 2;
     } else {
@@ -66,4 +68,5 @@ PRTC.opponentsPaddle = function clone(obj){
   
 }(PRTC.paddle);
 
+PRTC.opponentsPaddle.hidden = true;
 PRTC.opponentsPaddle.update = function(){};

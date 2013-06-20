@@ -5,6 +5,7 @@ PRTC.game = {
   
   modules: [
     'scene',
+    'net', 
     
     'level',
     'ball',
