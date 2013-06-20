@@ -77,15 +77,14 @@ PRTC.ball = {
        if (collisions[0].object.name === 'block') {
          PRTC.block.removeBlock(collisions[0].object);
          this.removeFromCollidingObjects(collisions[0].object);
-         PRTC.game.blocksDestroyed++;
+         PRTC.block.blocksDestroyed++;
          if (PRTC.game.blocksDestroyed === PRTC.block.numberOfBlocks) {
            PRTC.game.updatable.push(PRTC.scene);
            PRTC.paddle.cube.scale.x = PRTC.level.distance*2/PRTC.paddle.width;
            PRTC.paddle.cube.position.x = 0;
-           this.velocityX *= 3;
-           this.velocityY *= 3;
          }
        } else if (collisions[0].object.name === 'paddle' && this.lastCollided !== 'paddle') {
+
          this.velocityX += collisions[0].object.vel;
        }
        

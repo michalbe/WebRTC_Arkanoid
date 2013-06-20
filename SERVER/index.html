@@ -28,8 +28,7 @@
         });
 
         textField.addEventListener('change', function(e){
-            e.stopPropagation();
-
+            //e.stopPropagation();
             var inputData = textField.value;
 
             socket.emit('front-playermove', {data: inputData});

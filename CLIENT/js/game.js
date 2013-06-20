@@ -1,17 +1,17 @@
 var PRTC = PRTC || {};
 
 PRTC.game = {  
-  stop: false,
+  running: false,
+  
   modules: [
     'scene',
     
     'level',
     'ball',
     'paddle',
+    'opponentsPaddle',
     'block',
   ],
-  
-  blocksDestroyed: 0,
   
   keyboard: new THREEx.KeyboardState(),
   updatable: [],
@@ -51,10 +51,19 @@ PRTC.game = {
     });
   },
   
+  start:  function(){
+    this.running = true;
+    this.loop();
+  },
+  
+  stop: function(){
+    this.running = false;
+  },
+  
   loop: function game_loop() {
     this.updateModules();
     PRTC.scene.render();
-    if (!this.stop) {
+    if (this.running) {
       window.requestAnimationFrame(this.loop.ctx);
     }
   }
