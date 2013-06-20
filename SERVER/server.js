@@ -65,7 +65,8 @@ var Player = function(id){
         setPos : setPos,
         getId : getId,
         joinGame : joinGame,
-        getGame : getGame
+        getGame : getGame,
+        id : id
     };
 };
 
@@ -137,7 +138,7 @@ io.sockets.on('connection', function (socket) {
         //debug
         var rooms = io.sockets.manager.roomClients[socket.id];
 
-        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer});
+        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES});
     });
 
     //TODO save position change
