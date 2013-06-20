@@ -122,17 +122,24 @@ io.sockets.on('connection', function (socket) {
             player = MZ.PLAYERS[socket.id],
 
             //is it the second player in game ?
-            secondPlayer = false;
+            secondPlayer = false,
+            game;
 
         if (!hash){
             hash = generateGameHash(); 
         }
 
-        if (MZ.GAMES[hash]){
+        game = MZ.GAMES[hash];
+
+        if (game != null && game.length !== 2){
             MZ.GAMES[hash].push(player);
 
             secondPlayer = true;
         } else {
+            if (game != null && game.length === 2){
+                //2 players already
+                hash = generateGameHash();
+            }
             MZ.GAMES[hash] = [player];
         }
 
@@ -163,11 +170,10 @@ io.sockets.on('connection', function (socket) {
 
         removeGamePlayer(game, player);
 
-        socket.to(gameHash).emit('foo1', {gameHash: gameHash});
-
         //second player still in the game
         if (game && game.length > 0){
-            socket.broadcast.to(gameHash).emit('back-playerleft');
+            //socket.broadcast.to(gameHash).emit('back-playerleft');
+            socket.broadcast.to(gameHash).emit('back-playerleft', {gameHash: gameHash});
         } else {
             delete MZ.GAMES[player.getGame()];
         }

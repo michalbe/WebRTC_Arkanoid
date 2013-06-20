@@ -44,6 +44,11 @@
         socket.on('back-playermove', function (data){
             console.log('PLAYER SIE RUSZA: ', data);
         });
+
+        //player sie rusza
+        socket.on('back-playerleft', function (data){
+            console.log('PLAYER WYSZET: ');
+        });
     });
 </script>
 </body>
