@@ -27,7 +27,7 @@
             socket.emit('front-newgame', {data: inputData});
         });
 
-        textField.addEventListener('onchange', function(e){
+        textField.addEventListener('change', function(e){
             e.stopPropagation();
 
             var inputData = textField.value;

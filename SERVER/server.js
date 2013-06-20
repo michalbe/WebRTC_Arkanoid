@@ -61,11 +61,16 @@ var Player = function(id){
         return this.game;
     };
 
+    var setGame = function(hash){
+        this.game = hash;
+    }
+
     return {
         setPos : setPos,
         getId : getId,
         joinGame : joinGame,
         getGame : getGame,
+        setGame : setGame,
         id : id
     };
 };
@@ -131,6 +136,8 @@ io.sockets.on('connection', function (socket) {
             MZ.GAMES[hash] = [player];
         }
 
+        player.setGame(hash);
+
         //join to new room
         //https://github.com/LearnBoost/socket.io/wiki/Rooms
         socket.join(hash);
@@ -155,6 +162,8 @@ io.sockets.on('connection', function (socket) {
             game   = MZ.GAMES[gameHash];
 
         removeGamePlayer(game, player);
+
+        socket.to(gameHash).emit('foo1', {gameHash: gameHash});
 
         //second player still in the game
         if (game && game.length > 0){
