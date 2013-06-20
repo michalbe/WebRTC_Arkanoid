@@ -38,15 +38,20 @@ var Player = function(id){
     this.id = id;
     this.x = null;
     this.y = null;
-    this.z = null;
     this.game = null;
 
     var me = this;
 
-    var setPos = function(x, y, z){
+    var setPos = function(x, y){
         me.x = x;
         me.y = y;
-        me.z = z;
+    };
+
+    var getPos = function(){
+        return {
+            x: me.x,
+            y: me.y
+        };
     };
 
     var getId = function(){
@@ -67,6 +72,7 @@ var Player = function(id){
 
     return {
         setPos : setPos,
+        getPos : getPos,
         getId : getId,
         joinGame : joinGame,
         getGame : getGame,
@@ -163,9 +169,13 @@ io.sockets.on('connection', function (socket) {
     //TODO save position change
     socket.on('front-playermove', function(data){
         var player = MZ.PLAYERS[socket.id],
-            gameHash = player.getGame();
+            gameHash = player.getGame(),
+            posX = data.x,
+            posY = data.y;
 
-        socket.broadcast.to(gameHash).emit('back-playermove', {data: data.data});
+        player.setPos(posX, posY);
+
+        socket.broadcast.to(gameHash).emit('back-playermove', {x: posX, y: posY});
     });
 
     socket.on('disconnect', function () {
