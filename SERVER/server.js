@@ -151,6 +151,7 @@ io.sockets.on('connection', function (socket) {
             socket.join(hash);
         } else {
             hash = player.getGame();
+            secondPlayer = true;
         }
 
         //debug
