@@ -13,6 +13,7 @@ PRTC.ball = {
   velocityX: 5, //~~(Math.random()*10),
   velocityY: -4,
   collides: [],
+  lastCollided: null,
   
   distance: 20,
   caster: new THREE.Raycaster(),
@@ -74,7 +75,7 @@ PRTC.ball = {
        // 
        
        if (collisions[0].object.name === 'block') {
-         PRTC.scene.remove(collisions[0].object);
+         PRTC.block.removeBlock(collisions[0].object);
          this.removeFromCollidingObjects(collisions[0].object);
          PRTC.game.blocksDestroyed++;
          if (PRTC.game.blocksDestroyed === PRTC.block.numberOfBlocks) {
@@ -84,7 +85,7 @@ PRTC.ball = {
            this.velocityX *= 3;
            this.velocityY *= 3;
          }
-       } else if (collisions[0].object.name === 'paddle') {
+       } else if (collisions[0].object.name === 'paddle' && this.lastCollided !== 'paddle') {
          this.velocityX += collisions[0].object.vel;
        }
        
@@ -103,6 +104,8 @@ PRTC.ball = {
          this.velocityX *= -1;
          //this.velocityX = (this.velocityX*-1) + ~~(Math.random()*6)-3;
        }
+       
+       this.lastCollided = collisions[0].object.name;
      }
     }
     
