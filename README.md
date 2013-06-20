@@ -23,5 +23,5 @@ command line:
 
 browser:
 
-  http://localhost:8060
+    http://localhost:8060
 
