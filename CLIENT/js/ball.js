@@ -75,7 +75,7 @@ PRTC.ball = {
        // 
        
        if (collisions[0].object.name === 'block') {
-         PRTC.scene.remove(collisions[0].object);
+         PRTC.block.removeBlock(collisions[0].object);
          this.removeFromCollidingObjects(collisions[0].object);
          PRTC.game.blocksDestroyed++;
          if (PRTC.game.blocksDestroyed === PRTC.block.numberOfBlocks) {

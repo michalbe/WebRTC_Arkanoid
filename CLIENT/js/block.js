@@ -1,6 +1,8 @@
 var PRTC = PRTC || {};
 
 PRTC.block = {  
+  updatable: true,
+  
   patternURL: 'assets/blocks.png',
   materials: {},
   geometry: null,
@@ -13,6 +15,7 @@ PRTC.block = {
   numberOfBlocks: 168,
   blocksCreated: 0,
   blocksColors: null,
+  toRemove: [],
   
   init: function paddle_init() {
     this.geometry = new THREE.CubeGeometry(
@@ -72,5 +75,25 @@ PRTC.block = {
   
   r2h: function(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  },
+  
+  removeBlock: function(block) {
+    this.toRemove.push(block);
+  },
+  
+  update: function(){
+    if (this.toRemove.length < 1) return;
+    
+    this.toRemove.forEach(function(block){
+      if (block.scale.y < 0.1) {
+        PRTC.scene.remove(block);
+        block = '';
+      } else {
+        block.scale.y -= 0.05;
+        block.scale.x -= 0.05;
+      }
+    });
+    
+    this.toRemove = this.toRemove.filter(function(obj) { return obj !== ''; });
   }
 }
