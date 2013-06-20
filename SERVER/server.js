@@ -151,7 +151,7 @@ io.sockets.on('connection', function (socket) {
         //debug
         var rooms = io.sockets.manager.roomClients[socket.id];
 
-        socket.emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES, totalRooms: io.sockets.manager.rooms});
+        io.sockets.in(hash).emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES, totalRooms: io.sockets.manager.rooms});    
     });
 
     //TODO save position change
