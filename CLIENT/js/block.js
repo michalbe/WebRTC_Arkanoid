@@ -14,6 +14,7 @@ PRTC.block = {
   blocksInRow: 21,
   numberOfBlocks: 168,
   blocksCreated: 0,
+  blocksDestroyed: 0,
   blocksColors: null,
   toRemove: [],
   
@@ -84,15 +85,17 @@ PRTC.block = {
   update: function(){
     if (this.toRemove.length < 1) return;
     
-    this.toRemove.forEach(function(block){
+    this.toRemove.forEach(function(block, index){
       if (block.scale.y < 0.1) {
+      //if (block.position.y < 0) {
         PRTC.scene.remove(block);
-        block = '';
+        this.toRemove[index] = '';
       } else {
+        //block.position.y -= 10;
         block.scale.y -= 0.05;
         block.scale.x -= 0.05;
       }
-    });
+    }, this);
     
     this.toRemove = this.toRemove.filter(function(obj) { return obj !== ''; });
   }

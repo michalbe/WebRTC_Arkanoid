@@ -32,6 +32,8 @@ PRTC.paddle = {
     
     this.cube.name = "paddle";
     this.cube.position.y = this.height*1.1;
+    this.cube.vel = 0;
+    
     PRTC.scene.add(this.cube);
     PRTC.ball.addCollidingObjects(this.cube);
   },
@@ -48,3 +50,20 @@ PRTC.paddle = {
     }
   }
 }
+
+
+PRTC.opponentsPaddle = function clone(obj){
+  
+  if(obj == null || typeof(obj) != 'object')
+    return obj;
+    
+  var temp = obj.constructor();
+
+  for(var key in obj)
+    temp[key] = clone(obj[key]);
+  
+  return temp;
+  
+}(PRTC.paddle);
+
+PRTC.opponentsPaddle.update = function(){};
