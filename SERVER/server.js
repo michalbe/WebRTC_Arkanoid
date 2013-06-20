@@ -32,7 +32,7 @@ var Player = function(id){
 
     var me = this;
 
-    var setX = function(x, y){
+    var setX = function(x){
         me.x = x;
     };
 
@@ -47,10 +47,6 @@ var Player = function(id){
         return me.id;
     };
 
-    var joinGame = function(gameHash){
-        this.game = gameHash;
-    };
-
     var getGame = function(){
         return this.game;
     };
@@ -63,7 +59,6 @@ var Player = function(id){
         setX : setX,
         getX : getX,
         getId : getId,
-        joinGame : joinGame,
         getGame : getGame,
         setGame : setGame
     };
@@ -98,14 +93,10 @@ MZ.PLAYERS = {};
 */
 MZ.GAMES = {};
 
-//object with all sockets currently connected
-MZ.SOCKETS = {};
-
 io.sockets.on('connection', function (socket) {
     var token  = socket.id,
         player = new Player(token);
 
-    MZ.SOCKETS[token] = socket;
     MZ.PLAYERS[token] = player;
 
     //events with front/back prefix for easier development
@@ -140,21 +131,16 @@ io.sockets.on('connection', function (socket) {
 
             player.setGame(hash);
 
-            //join to new room
-            //https://github.com/LearnBoost/socket.io/wiki/Rooms
+            //join to room
             socket.join(hash);
         } else {
             hash = player.getGame();
             secondPlayer = true;
         }
 
-        //debug
-        var rooms = io.sockets.manager.roomClients[socket.id];
-
-        io.sockets.in(hash).emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES, totalRooms: io.sockets.manager.rooms});    
+        io.sockets.in(hash).emit('back-newgame', {hash: hash, secondPlayer: secondPlayer});    
     });
 
-    //TODO save position change
     socket.on('front-playermove', function(data){
         var player = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
@@ -174,13 +160,10 @@ io.sockets.on('connection', function (socket) {
 
         //second player still in the game
         if (game && game.length > 0){
-            //socket.broadcast.to(gameHash).emit('back-playerleft');
             socket.broadcast.to(gameHash).emit('back-playerleft', {gameHash: gameHash});
         } else {
             delete MZ.GAMES[player.getGame()];
         }
-
-        delete MZ.SOCKETS[socket.id];
         delete MZ.PLAYERS[socket.id];
     });
 });
