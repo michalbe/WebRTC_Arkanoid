@@ -51,7 +51,7 @@ PRTC.scene = {
     
     THREEx.WindowResize(this.renderer, this.camera);
     
-    this.setLights(0, 255, 255);
+    this.setLights(0, 500, 300);
   },
   
   setLights: function main_setLights(x, y, z) {

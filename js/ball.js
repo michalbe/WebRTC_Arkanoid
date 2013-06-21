@@ -4,7 +4,7 @@ PRTC.ball = {
   // flag for 'game' module
   updatable: true,
   
-  texture: 'assets/ball-texture.jpg',
+  texture: 'assets/paddle.jpg',
   material: null,
   radius: 20,
   segments: 16,
