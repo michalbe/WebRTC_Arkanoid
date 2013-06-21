@@ -16,7 +16,6 @@ PRTC.net = {
     this.inviteBtn.hidden = true;
     
     this.socket.on('back-newgame', function (data) {
-      console.log('BAKCNIUGAME WROCILOOOOOOOOO', data);
         this.gameId = data.hash;
         window.location.hash = this.gameId;
         this.newGameBtn.hidden = true;
@@ -30,8 +29,19 @@ PRTC.net = {
         }
     }.bind(this));
     
-    this.socket.on('back-playermove', function(data){
-      PRTC.opponentsPaddle.cube.position.x = data.x;
+    this.socket.on('back-playermove', function(data) {
+      if (data.x) {
+        PRTC.opponentsPaddle.cube.position.x = data.x;
+      }
+      if (data.ball) {
+        var vel = data.ball.vel;
+        var pos = data.ball.position;
+        PRTC.ball.velocityX = vel.x;
+        PRTC.ball.velocityY = vel.y;
+        PRTC.ball.sphere.position = pos;
+        PRTC.ball.sphere.position.x += vel.x;
+        PRTC.ball.sphere.position.y += vel.y;
+      }
     });
     
     if (window.location.hash !== '') {
@@ -47,8 +57,8 @@ PRTC.net = {
     }
   },
   
-  send: function(position) {
-      this.socket.emit('front-playermove', {x: position});
+  send: function(position, ball) {
+      this.socket.emit('front-playermove', {x: position, ball: ball});
   }
   
 }

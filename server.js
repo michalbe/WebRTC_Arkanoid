@@ -29,7 +29,14 @@ var Player = function(id){
     this.id = id;
     this.x = null;
     this.game = null;
-
+    this.ball = { 
+      position: [0, 0, 0],
+      vel: {
+        x: 0,
+        y: 0
+      }
+    };
+    
     var me = this;
 
     var setX = function(x, y){
@@ -37,10 +44,7 @@ var Player = function(id){
     };
 
     var getX = function(){
-        return {
-            x: me.x,
-            y: me.y
-        };
+        return me.x;
     };
 
     var getId = function(){
@@ -57,6 +61,14 @@ var Player = function(id){
 
     var setGame = function(hash){
         this.game = hash;
+    };
+    
+    var setBall = function(ball) {
+      this.ball = ball;
+    };
+    
+    var getBall = function() {
+      return this.ball;
     }
 
     return {
@@ -65,7 +77,9 @@ var Player = function(id){
         getId : getId,
         joinGame : joinGame,
         getGame : getGame,
-        setGame : setGame
+        setGame : setGame,
+        setBall : setBall,
+        getBall: getBall
     };
 };
 
@@ -158,11 +172,21 @@ io.sockets.on('connection', function (socket) {
     socket.on('front-playermove', function(data){
         var player = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
-            posX = data.x;
+            posX = data.x,
+            ball = data.ball;
 
-        player.setX(posX);
-
-        socket.broadcast.to(gameHash).emit('back-playermove', {x: posX});
+//        if (posX !== null) {
+          player.setX(posX);
+        // } else {
+        //     posX = player.getX;
+        //   }
+        //         
+        if (ball !== undefined) {
+          player.setBall(ball);
+        }
+        
+        console.log(posX, ball);
+        socket.broadcast.to(gameHash).emit('back-playermove', {x: posX, ball: ball});
     });
 
     socket.on('disconnect', function () {
