@@ -2,15 +2,16 @@ var st = require('node-static'),
     crypto = require('crypto'),
     fs = require('fs'),
     http = require('http'),
-    file = new(st.Server)();
+    file = new(st.Server)(),
+    //game object
+    MZ = {},
+    app,
+    io,
 
-var app = http.createServer(function (req, res) {
+app = http.createServer(function (req, res) {
   file.serve(req, res);
 }).listen(8060);
-
-    var io = require('socket.io').listen(app),
-    //game object
-    MZ = {};
+io = require('socket.io').listen(app);
 
 var generateGameHash = function(){
     var seed = crypto.randomBytes(20),
@@ -53,7 +54,7 @@ var Player = function(id){
 
     var setGame = function(hash){
         this.game = hash;
-    }
+    };
 
     return {
         setX : setX,
