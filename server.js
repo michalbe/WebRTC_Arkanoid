@@ -1,16 +1,18 @@
-var st = require('node-static'),
+var st     = require('node-static'),
     crypto = require('crypto'),
-    fs = require('fs'),
-    http = require('http'),
-    file = new(st.Server)();
+    fs     = require('fs'),
+    http   = require('http'),
+    file   = new(st.Server)(),
+    //game object
+    MZ     = {},
+    app,
+    io,
 
-var app = http.createServer(function (req, res) {
-  file.serve(req, res);
+app = http.createServer(function (req, res) {
+    file.serve(req, res);
 }).listen(8060);
 
-    var io = require('socket.io').listen(app),
-    //game object
-    MZ = {};
+io = require('socket.io').listen(app);
 
 var generateGameHash = function(){
     var seed = crypto.randomBytes(20),
@@ -26,56 +28,44 @@ var generateGameHash = function(){
 };
 
 var Player = function(id){
-    this.id = id;
-    this.x = null;
+    this.id   = id;
+    this.x    = null;
     this.game = null;
     this.ball = { 
-      position: [0, 0, 0],
-      vel: {
-        x: 0,
-        y: 0
-      }
+        position: [0, 0, 0],
+        vel: {
+            x: 0,
+            y: 0
+        }
     };
     
-    var me = this;
-
-    var setX = function(x, y){
-        me.x = x;
-    };
-
-    var getX = function(){
-        return me.x;
-    };
-
-    var getId = function(){
-        return me.id;
-    };
-
-    var joinGame = function(gameHash){
-        this.game = gameHash;
-    };
-
-    var getGame = function(){
-        return this.game;
-    };
-
-    var setGame = function(hash){
-        this.game = hash;
-    };
-    
-    var setBall = function(ball) {
-      this.ball = ball;
-    };
-    
-    var getBall = function() {
-      return this.ball;
-    }
+    var me = this,
+        setX = function(x){
+            me.x = x;
+        },
+        getX = function(){
+            return me.x;
+        },
+        getId = function(){
+            return me.id;
+        },
+        getGame = function(){
+            return this.game;
+        },
+        setGame = function(hash){
+            this.game = hash;
+        },
+        setBall = function(ball) {
+            this.ball = ball;
+        },  
+        getBall = function() {
+            return this.ball;
+        };
 
     return {
         setX : setX,
         getX : getX,
         getId : getId,
-        joinGame : joinGame,
         getGame : getGame,
         setGame : setGame,
         setBall : setBall,
@@ -85,7 +75,7 @@ var Player = function(id){
 
 var removeGamePlayer = function(gameId, player){
     var game = MZ.GAMES[gameId],
-        idx = null;
+        idx  = null;
 
     if (game){
         for (var i=0, l=game.length; i<l; i+=1){
@@ -112,23 +102,18 @@ MZ.PLAYERS = {};
 */
 MZ.GAMES = {};
 
-//object with all sockets currently connected
-MZ.SOCKETS = {};
-
 io.sockets.on('connection', function (socket) {
     var token  = socket.id,
         player = new Player(token);
 
-    MZ.SOCKETS[token] = socket;
     MZ.PLAYERS[token] = player;
 
     //events with front/back prefix for easier development
     socket.emit('back-connected', { socketToken: token });
 
     socket.on('front-newgame', function(data) {
-        var hash = data.data,
-            player = MZ.PLAYERS[socket.id],
-
+        var hash         = data.data,
+            player       = MZ.PLAYERS[socket.id],
             //is it the second player in game ?
             secondPlayer = false,
             game;
@@ -154,57 +139,44 @@ io.sockets.on('connection', function (socket) {
 
             player.setGame(hash);
 
-            //join to new room
-            //https://github.com/LearnBoost/socket.io/wiki/Rooms
+            //join to room
             socket.join(hash);
         } else {
             hash = player.getGame();
             secondPlayer = true;
         }
 
-        //debug
-        var rooms = io.sockets.manager.roomClients[socket.id];
-
-        io.sockets.in(hash).emit('back-newgame', {hash: hash, secondPlayer: secondPlayer, rooms: rooms, games: MZ.GAMES, totalRooms: io.sockets.manager.rooms});    
+        io.sockets.in(hash).emit('back-newgame', {hash: hash, secondPlayer: secondPlayer});    
     });
 
-    //TODO save position change
     socket.on('front-playermove', function(data){
-        var player = MZ.PLAYERS[socket.id],
+        var player   = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
-            posX = data.x,
-            ball = data.ball;
+            posX     = data.x,
+            ball     = data.ball;
 
-//        if (posX !== null) {
-          player.setX(posX);
-        // } else {
-        //     posX = player.getX;
-        //   }
-        //         
+        player.setX(posX);
+     
         if (ball !== undefined) {
           player.setBall(ball);
         }
-        
-        console.log(posX, ball);
+
         socket.broadcast.to(gameHash).emit('back-playermove', {x: posX, ball: ball});
     });
 
     socket.on('disconnect', function () {
-        var player = MZ.PLAYERS[socket.id],
+        var player   = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
-            game   = MZ.GAMES[gameHash];
+            game     = MZ.GAMES[gameHash];
 
         removeGamePlayer(game, player);
 
         //second player still in the game
         if (game && game.length > 0){
-            //socket.broadcast.to(gameHash).emit('back-playerleft');
             socket.broadcast.to(gameHash).emit('back-playerleft', {gameHash: gameHash});
         } else {
             delete MZ.GAMES[player.getGame()];
         }
-
-        delete MZ.SOCKETS[socket.id];
         delete MZ.PLAYERS[socket.id];
     });
 });
