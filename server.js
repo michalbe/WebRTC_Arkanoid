@@ -1,16 +1,17 @@
-var st = require('node-static'),
+var st     = require('node-static'),
     crypto = require('crypto'),
-    fs = require('fs'),
-    http = require('http'),
-    file = new(st.Server)(),
+    fs     = require('fs'),
+    http   = require('http'),
+    file   = new(st.Server)(),
     //game object
-    MZ = {},
+    MZ     = {},
     app,
     io,
 
 app = http.createServer(function (req, res) {
-  file.serve(req, res);
+    file.serve(req, res);
 }).listen(8060);
+
 io = require('socket.io').listen(app);
 
 var generateGameHash = function(){
@@ -27,47 +28,54 @@ var generateGameHash = function(){
 };
 
 var Player = function(id){
-    this.id = id;
-    this.x = null;
+    this.id   = id;
+    this.x    = null;
     this.game = null;
-
-    var me = this;
-
-    var setX = function(x){
-        me.x = x;
+    this.ball = { 
+        position: [0, 0, 0],
+        vel: {
+            x: 0,
+            y: 0
+        }
     };
-
-    var getX = function(){
-        return {
-            x: me.x,
-            y: me.y
+    
+    var me = this,
+        setX = function(x){
+            me.x = x;
+        },
+        getX = function(){
+            return me.x;
+        },
+        getId = function(){
+            return me.id;
+        },
+        getGame = function(){
+            return this.game;
+        },
+        setGame = function(hash){
+            this.game = hash;
+        },
+        setBall = function(ball) {
+            this.ball = ball;
+        },  
+        getBall = function() {
+            return this.ball;
         };
-    };
-
-    var getId = function(){
-        return me.id;
-    };
-
-    var getGame = function(){
-        return this.game;
-    };
-
-    var setGame = function(hash){
-        this.game = hash;
-    };
 
     return {
         setX : setX,
         getX : getX,
         getId : getId,
         getGame : getGame,
-        setGame : setGame
+        setGame : setGame,
+        setBall : setBall,
+        getBall: getBall
     };
 };
 
 var removeGamePlayer = function(gameId, player){
     var game = MZ.GAMES[gameId],
-        idx = null;
+        idx  = null;
 
     if (game){
         for (var i=0, l=game.length; i<l; i+=1){
@@ -104,9 +112,8 @@ io.sockets.on('connection', function (socket) {
     socket.emit('back-connected', { socketToken: token });
 
     socket.on('front-newgame', function(data) {
-        var hash = data.data,
-            player = MZ.PLAYERS[socket.id],
-
+        var hash         = data.data,
+            player       = MZ.PLAYERS[socket.id],
             //is it the second player in game ?
             secondPlayer = false,
             game;
@@ -143,19 +150,24 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('front-playermove', function(data){
-        var player = MZ.PLAYERS[socket.id],
+        var player   = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
-            posX = data.x;
+            posX     = data.x,
+            ball     = data.ball;
 
         player.setX(posX);
+     
+        if (ball !== undefined) {
+          player.setBall(ball);
+        }
 
-        socket.broadcast.to(gameHash).emit('back-playermove', {x: posX});
+        socket.broadcast.to(gameHash).emit('back-playermove', {x: posX, ball: ball});
     });
 
     socket.on('disconnect', function () {
-        var player = MZ.PLAYERS[socket.id],
+        var player   = MZ.PLAYERS[socket.id],
             gameHash = player.getGame(),
-            game   = MZ.GAMES[gameHash];
+            game     = MZ.GAMES[gameHash];
 
         removeGamePlayer(game, player);
 

@@ -4,7 +4,7 @@ PRTC.ball = {
   // flag for 'game' module
   updatable: true,
   
-  texture: 'assets/ball-texture.jpg',
+  texture: 'assets/paddle.jpg',
   material: null,
   radius: 20,
   segments: 16,
@@ -103,7 +103,13 @@ PRTC.ball = {
          this.velocityX *= -1;
          //this.velocityX = (this.velocityX*-1) + ~~(Math.random()*6)-3;
        }
-       
+       PRTC.net.send(PRTC.paddle.cube.position.x, { 
+         position: this.sphere.position, 
+         vel: {
+           x: this.velocityX,
+           y: this.velocityY
+         }
+       });
        this.lastCollided = collisions[0].object.name;
      }
     }

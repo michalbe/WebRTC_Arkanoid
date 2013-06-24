@@ -30,13 +30,17 @@ PRTC.block = {
     this.nextX = (PRTC.level.distance * -1) + (PRTC.level.blockWidth/2) + (this.size/2) + this.marginX;
     
     var img = new Image();
+    img.onload = function(){
+       var canvas = document.createElement('canvas');
+       var ctx = canvas.getContext('2d');
+       canvas.width = this.blocksInRow;
+       canvas.height = this.numberOfBlocks/this.blocksInRow;
+       ctx.drawImage(img, 0, 0);
+       this.blocksColors = ctx.getImageData(0, 0, canvas.width, canvas.height).data;       
+       PRTC.game.generateBlocks();
+    }.bind(this);
+    
     img.src = this.patternURL;
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    canvas.width = this.blocksInRow;
-    canvas.height = this.numberOfBlocks/this.blocksInRow;
-    ctx.drawImage(img, 0, 0);
-    this.blocksColors = ctx.getImageData(0, 0, canvas.width, canvas.height).data;      
   },
   
   create: function() {

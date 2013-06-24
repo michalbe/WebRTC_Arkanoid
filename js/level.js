@@ -51,14 +51,14 @@ PRTC.level= {
   },
   
   addFloor: function () {
-    var floorTexture = new THREE.ImageUtils.loadTexture( this.floorTexture );
+    var floorTexture = new THREE.ImageUtils.loadTexture( this.skyTexture );
   	var floorMaterial = new THREE.MeshLambertMaterial( 
   	  { map: floorTexture, side: THREE.BackSide } 
   	);
   	
   	var floorGeometry = new THREE.PlaneGeometry(4000, 1000, 10, 10);
   	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  	floor.position.y = -0.5;
+  	floor.position.z = 200;
   	floor.rotation.x = Math.PI / 2;
     PRTC.scene.add(floor);
   },
@@ -66,14 +66,15 @@ PRTC.level= {
   addSky: function (){
 
     var skyTexture = new THREE.ImageUtils.loadTexture(this.skyTexture);
-  	var skyMaterial = new THREE.MeshBasicMaterial( 
-  	  { map: skyTexture, side: THREE.BackSide } 
-  	);
-  	
+    var skyMaterial = new THREE.MeshBasicMaterial( 
+      { map: skyTexture, side: THREE.BackSide } 
+    );
+    
     var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-  	var skyBox = new THREE.Mesh( skyBoxGeometry, skyMaterial );
+    var skyBox = new THREE.Mesh( skyBoxGeometry, skyMaterial );
+    skyBox.scale.x = skyBox.scale.y = 2;
+
     skyBox.flipSided = true; 
-    skyBox.rotation.y = 2;  
     PRTC.scene.add(skyBox);
   },
   

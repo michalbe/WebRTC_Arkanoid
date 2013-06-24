@@ -21,14 +21,15 @@ PRTC.game = {
     this.modules.forEach(this.initModule, this);
     this.loop.ctx = this.loop.bind(this);
     this.loop.ctx();
-    
+  },
+  
+  generateBlocks: function(){
     var blocks = [];
     for (var i=0; i< PRTC.block.numberOfBlocks; i++) {
       blocks.push(PRTC.block.create());
     }
     
     PRTC.ball.addCollidingObjects(blocks);
-    
   },
   
   initModule: function game_initModule(module) {
