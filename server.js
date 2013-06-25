@@ -4,9 +4,11 @@ var st = require('node-static'),
     http = require('http'),
     file = new(st.Server)();
 
+var port = process.env.VMC_APP_PORT || process.env.PORT || 8060;
+
 var app = http.createServer(function (req, res) {
   file.serve(req, res);
-}).listen(8060);
+}).listen(port);
 
     var io = require('socket.io').listen(app),
     //game object
